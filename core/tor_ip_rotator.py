@@ -11,8 +11,7 @@ def rotate_ip():
             print("[✔] Tor IP rotation signal sent successfully.")
     except Exception as e:
         print(f"[!] Tor IP rotation failed: {e}")
-        print("[-] FAILED TO CONNECT. PLEASE CHECK TOR CONTROLPORT OR torrc CONFIG.")
-
+    
 def test_current_ip():
     try:
         s = socket.socket()
