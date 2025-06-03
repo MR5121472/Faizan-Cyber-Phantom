@@ -19,7 +19,7 @@ def intro():
     print("-" * 80)
     print("🔐 ULTRA SECURE. STEALTH. POWERFUL.".ljust(55) + "🛡️  DEVELOPED BY:")
     print("👑  MUHAMMAD FAIZAN NAEEM".ljust(55))
-    print("✍️  AKA: FAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN".ljust(80))
+    print("☠️  AKA: FAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN".ljust(80))
     print_border()
     time.sleep(1)
 
