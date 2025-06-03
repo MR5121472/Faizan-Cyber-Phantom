@@ -1,44 +1,42 @@
-import socket
-import socks  # PySocks library
+import time
+from stem import Signal
+from stem.control import Controller
+import requests
 
-class ProxyEngine:
-    def __init__(self, proxy_ip='127.0.0.1', proxy_port=9050):
-        self.proxy_ip = proxy_ip
-        self.proxy_port = proxy_port
-        self.sock = None
+def renew_tor_ip():
+    with Controller.from_port(port=9051) as controller:
+        controller.authenticate()  # Default password-less or set your password here
+        controller.signal(Signal.NEWNYM)
+        print("[+] Tor NEWNYM signal sent: IP should change now.")
 
-    def start_proxy(self):
-        print("[+] Initializing Faizan™ Privacy Proxy Engine...")
-        # Set default SOCKS5 proxy (used by Tor)
-        socks.set_default_proxy(socks.SOCKS5, self.proxy_ip, self.proxy_port)
-        socket.socket = socks.socksocket
-        print(f"[+] Proxy initialized through SOCKS5 at {self.proxy_ip}:{self.proxy_port}")
+def get_current_ip():
+    try:
+        proxies = {
+            'http': 'socks5h://127.0.0.1:9050',
+            'https': 'socks5h://127.0.0.1:9050'
+        }
+        response = requests.get("http://check.torproject.org/api/ip", proxies=proxies, timeout=10)
+        ip = response.json().get("IP")
+        print(f"[+] Current Tor IP: {ip}")
+        return ip
+    except Exception as e:
+        print(f"[-] Could not get IP: {e}")
+        return None
 
-    def connect(self, dest_host, dest_port):
-        try:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.connect((dest_host, dest_port))
-            print(f"[+] Connected to {dest_host}:{dest_port} via Tor proxy.")
-            return True
-        except Exception as e:
-            print(f"[-] Connection failed: {e}")
-            return False
-
-    def send_data(self, data):
-        if self.sock:
-            self.sock.sendall(data)
-            print("[+] Data sent successfully.")
+def auto_ip_rotation(interval=2):
+    print("[*] Starting Auto IP Rotation every", interval, "seconds.")
+    current_ip = None
+    while True:
+        renew_tor_ip()
+        time.sleep(5)  # Tor needs some seconds to switch IP
+        new_ip = get_current_ip()
+        if new_ip != current_ip:
+            print(f"[+] IP Changed to: {new_ip}")
+            current_ip = new_ip
         else:
-            print("[-] Socket not connected.")
+            print("[-] IP did not change, retrying...")
+        time.sleep(interval)
 
-    def receive_data(self, buffer_size=4096):
-        if self.sock:
-            return self.sock.recv(buffer_size)
-        else:
-            print("[-] Socket not connected.")
-            return None
-
-    def close_connection(self):
-        if self.sock:
-            self.sock.close()
-            print("[+] Connection closed.")
+def start_proxy():
+    print("[+] Initializing Faizan™ Privacy Proxy Engine...")
+    auto_ip_rotation()
