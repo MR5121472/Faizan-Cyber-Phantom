@@ -1,3 +1,4 @@
+
 import os
 import time
 from core.proxy_engine import start_proxy
@@ -19,12 +20,16 @@ def intro():
     time.sleep(2)
 
 def banner():
-    print(f"\n🔥 Faizan™ Privacy Proxy System v{VERSION}")
-    print("🔒 Secure. Stealth. Powerful.\n")
+    print("\n" + "-"*70)
+    print(f"🔥 Welcome to Faizan™ Privacy Proxy System v{VERSION}")
+    print("🔒 Enabling ultra-secure encrypted proxy operations")
+    print("🕵️ Running in stealth mode...")
+    print("-"*70 + "\n")
+    time.sleep(1)
 
 def main():
-    intro()      # ← یہ نئی لائن added ہے
-    banner()     # ← پرانا banner بھی برقرار رہے گا
+    intro()
+    banner()
     start_proxy()
 
 if __name__ == "__main__":
