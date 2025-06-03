@@ -1,7 +1,7 @@
 import os
 import time
 from core.proxy_engine import ProxyEngine
-from core.tor_ip_rotator import rotate_ip  # نیا فنکشن شامل کیا گیا
+from core.tor_ip_rotator import rotate_ip, test_current_ip
 from config.settings import VERSION
 
 # ANSI Colors
