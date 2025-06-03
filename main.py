@@ -1,8 +1,7 @@
-
+from core.proxy_engine import ProxyEngine
+from config.settings import VERSION
 import os
 import time
-from core.proxy_engine import start_proxy
-from config.settings import VERSION
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -30,7 +29,14 @@ def banner():
 def main():
     intro()
     banner()
-    start_proxy()
+    proxy = ProxyEngine()
+    proxy.start_proxy()
+    # Example: connect to example.com port 80 (HTTP)
+    if proxy.connect('example.com', 80):
+        proxy.send_data(b"GET / HTTP/1.1\r\nHost: example.com\r\n\r\n")
+        response = proxy.receive_data()
+        print(response.decode(errors='ignore'))
+        proxy.close_connection()
 
 if __name__ == "__main__":
     main()
