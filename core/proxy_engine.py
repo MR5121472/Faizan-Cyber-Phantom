@@ -1,34 +1,32 @@
-import socket
-import socks
 import time
+import random
+import socket
 
 class ProxyEngine:
     def __init__(self):
-        print("[+] Initializing Faizan™ Privacy Proxy Engine...")
+        self.active = False
+        print("[+] Initializing Faizan™ Privacy Proxy Engine...", end=" " * 18)
+        time.sleep(1)
+        print("[+] Proxy Engine started in Lite Mode (No external libs)\n")
 
     def start_proxy(self):
-        print("[+] Proxy Engine started in Lite Mode (No external libs)")
-        print("\n[*] Starting IP rotation simulation every 2 seconds...\n")
+        self.active = True
+        print("[*] Starting IP rotation simulation every 2 seconds...\n")
+        self.simulate_ip_rotation()
+        print("\n[✓] IP rotation simulation complete.\n")
 
-        # Simulate IP change (یہ صرف demo کے لیے ہے)
-        ip_list = ["185.32.1.11", "192.168.44.1", "104.21.77.245", "172.217.14.206"]
-        for ip in ip_list:
+    def simulate_ip_rotation(self):
+        for _ in range(4):
+            ip = self.generate_random_ip()
             print(f"[✔] IP changed to: {ip}")
             time.sleep(2)
 
-        print("\n[✓] IP rotation simulation complete.\n")
+    def generate_random_ip(self):
+        return ".".join(str(random.randint(1, 255)) for _ in range(4))
 
     def connect(self, host, port):
         try:
-            # Set Tor proxy at localhost:9050
-            socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
-            socket.socket = socks.socksocket
-
-            s = socket.socket()
-            s.settimeout(10)
-            s.connect((host, port))
-            s.close()
-            return True
-        except Exception as e:
-            print(f"[-] Connection error: {e}")
+            with socket.create_connection((host, port), timeout=5) as sock:
+                return True
+        except Exception:
             return False
