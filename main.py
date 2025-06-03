@@ -1,5 +1,11 @@
 from core.proxy_engine import ProxyEngine
-from config.settings import VERSION
+
+def main():
+    engine = ProxyEngine()
+    engine.start_proxy()
+
+if __name__ == "__main__":
+    main()
 import os
 import time
 from core.proxy_engine import ProxyEngine
