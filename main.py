@@ -1,4 +1,3 @@
-
 import os
 import time
 from core.proxy_engine import ProxyEngine
@@ -21,12 +20,11 @@ def print_border():
 def intro():
     clear_screen()
     print_border()
-    title = f"🔥 FAIZAN™ PRIVACY PROXY SYSTEM v{VERSION}"
-    print(f"{YELLOW}{BOLD}{title.center(80)}{RESET}")
+    print(f"{YELLOW}{BOLD}{'\ud83d\udd25 FAIZAN\u2122 PRIVACY PROXY SYSTEM v' + VERSION:^80}{RESET}")
     print(f"{CYAN}{'-' * 80}{RESET}")
-    print(f"{GREEN}🔐 ULTRA SECURE. STEALTH. POWERFUL.".ljust(55) + f"{BLUE}🛡️  DEVELOPED BY:{RESET}")
-    print(f"{GREEN}👑  MUHAMMAD FAIZAN NAEEM".ljust(55))
-    print(f"{GREEN}✍️  AKA: FAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN".ljust(80))
+    print(f"{GREEN}\ud83d\udd10 ULTRA SECURE. STEALTH. POWERFUL.".ljust(55) + f"{BLUE}\ud83d\udee1\ufe0f  DEVELOPED BY:{RESET}")
+    print(f"{GREEN}\ud83d\udc51  MUHAMMAD FAIZAN NAEEM".ljust(55))
+    print(f"{GREEN}\u270d\ufe0f  AKA: FAIZAN MUGHAL \u2014 THE CYBER PHANTOM OF PAKISTAN".ljust(80))
     print_border()
     time.sleep(1)
 
@@ -54,3 +52,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
