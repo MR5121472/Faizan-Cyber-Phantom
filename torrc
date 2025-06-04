@@ -1,0 +1,4 @@
+ControlPort 9051
+CookieAuthentication 0
+SocksPort 9050
+Log notice stdout
