@@ -1,23 +1,26 @@
-import os, time, socket, subprocess
+import os
+import time
+import socket
+import subprocess
+from stem.control import Controller
 
-# Colorful startup interface
+# ----------------------- INTERFACE ---------------------------
 def banner():
     print("\033[95m" + "="*80)
-    print("                      \U0001F525 FAIZAN™ PRIVACY PROXY SYSTEM v3.2            ")
+    print("                      \U0001F525 FAIZAN™ PRIVACY PROXY SYSTEM v3.2")
     print("\033[94m" + "-"*80)
     print("\033[93m\U0001F512 ULTRA SECURE. STEALTH. POWERFUL.            \033[92m\U0001F6E1️  DEVELOPED BY:")
     print("\U0001F451  \033[1;96mMUHAMMAD FAIZAN NAEEM")
-    print("\u270D\uFE0F  AKA: \033[92mFAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN")
+    print("✍️  AKA: \033[92mFAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN")
     print("\033[95m" + "="*80)
     print("="*80)
-    print("                 \U0001F525 \033[93mWELCOME TO FAIZAN™ PRIVACY PROXY SYSTEM v3.2      ")
+    print("                 \U0001F525 \033[93mWELCOME TO FAIZAN™ PRIVACY PROXY SYSTEM v3.2")
     print("\033[94m" + "-"*80)
-    print("               \U0001F512 \033[93mENABLING ULTRA-SECURE ENCRYPTED PROXY OPERATIONS    ")
-    print("                         \U0001F575️  \033[91mRUNNING IN STEALTH MODE...                 ")
+    print("               \U0001F512 \033[93mENABLING ULTRA-SECURE ENCRYPTED PROXY OPERATIONS")
+    print("                         \U0001F575️  \033[91mRUNNING IN STEALTH MODE...")
     print("\033[94m" + "-"*70 + "\033[0m")
 
-# Start Tor process
-
+# ----------------------- TOR STARTER ---------------------------
 def start_tor():
     print("[*] Launching embedded Tor from script...")
     torrc_path = os.path.join(os.getcwd(), "torrc")
@@ -27,48 +30,59 @@ def start_tor():
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
-        time.sleep(10)  # wait to bootstrap
+        time.sleep(10)
         return tor_process
     except Exception as e:
-        print(f"[×] Failed to start Tor: {e}")
+        print(f"[x] Failed to start Tor: {e}")
         return None
 
-# Signal NEWNYM
-
+# ----------------------- TOR IP ROTATION ------------------------
 def rotate_ip():
     print("[*] Rotating IP via Tor network...")
     try:
-        with socket.create_connection(("127.0.0.1", 9051), timeout=5) as s:
-            s.sendall(b'AUTHENTICATE ""\r\n')
-            if b'250' not in s.recv(1024):
-                raise Exception("AUTH failed")
-            s.sendall(b'SIGNAL NEWNYM\r\n')
-            if b'250' in s.recv(1024):
-                print("[✔] Tor IP rotation signal sent successfully.\n")
-            else:
-                print("[×] Tor did not accept NEWNYM signal.")
+        with Controller.from_port(port=9051) as controller:
+            controller.authenticate(password='mySecret123')
+            controller.signal("NEWNYM")
+            print("[✓] IP rotated successfully via Tor.")
     except Exception as e:
-        print(f"[!] Tor IP rotation failed: {e}")
-        print("[-] FAILED TO CONNECT. PLEASE CHECK TOR OR PROXY SETTINGS.\n")
+        print("[×] Tor IP rotation failed:", e)
 
-# Main Execution
-
-def main():
-    banner()
-    tor_proc = start_tor()
-    if not tor_proc:
-        return
+# ------------------------ TEST TOR CONNECTION --------------------
+def test_tor_connection():
+    print("\n🌐 Testing Tor Proxy Connection via SOCKS5")
+    import socks
+    socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+    socket.socket = socks.socksocket
 
     try:
-        while True:
-            rotate_ip()
-            time.sleep(12)  # every 12 seconds
-    except KeyboardInterrupt:
-        print("\n[✓] User interrupted. Cleaning up...")
-    finally:
-        if tor_proc:
-            tor_proc.terminate()
-            print("[✓] Tor process terminated. System restored.\n")
+        sock = socket.socket()
+        sock.settimeout(10)
+        sock.connect(("check.torproject.org", 80))
+        sock.sendall(b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\n\r\n")
+        response = sock.recv(4096)
+        print("[+] Response from Tor site:\n")
+        print(response.decode())
+        sock.close()
+    except Exception as e:
+        print("[-] Tor connection failed:", e)
+
+# ------------------------ MAIN FUNCTION -------------------------
+def main():
+    banner()
+    tor_process = start_tor()
+    if not tor_process:
+        print("[×] Could not start Tor. Exiting.")
+        return
+
+    time.sleep(5)
+    rotate_ip()
+    test_tor_connection()
+
+    print("\n[*] All operations completed.")
+    try:
+        tor_process.terminate()
+    except:
+        pass
 
 if __name__ == "__main__":
     main()
