@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 import os, time, socket, subprocess
 
-# ANSI Colors
-RED = '\033[91m'
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-BLUE = '\033[94m'
-CYAN = '\033[96m'
-RESET = '\033[0m'
-BOLD = '\033[1m'
+def intro():
+    print("\033[95m" + "="*80)
+    print("                      🔥 FAIZAN™ PRIVACY PROXY SYSTEM v3.1            ")
+    print("\033[94m" + "-"*80)
+    print("\033[93m🔐 ULTRA SECURE. STEALTH. POWERFUL.            \033[92m🛡️  DEVELOPED BY:")
+    print("👑  \033[1;96mMUHAMMAD FAIZAN NAEEM")
+    print("✍️  AKA: \033[92mFAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN")
+    print("\033[95m" + "="*80)
+    print("="*80)
+    print("                 🔥 \033[93mWELCOME TO FAIZAN™ PRIVACY PROXY SYSTEM v3.1      ")
+    print("\033[94m" + "-"*80)
+    print("               🔒 \033[93mENABLING ULTRA-SECURE ENCRYPTED PROXY OPERATIONS    ")
+    print("                         🕵️  \033[91mRUNNING IN STEALTH MODE...                 ")
+    print("\033[94m" + "-"*70 + "\033[0m")
 
 def intro():
     print("\n[+] Initializing Faizan™ Privacy Proxy Engine...")
