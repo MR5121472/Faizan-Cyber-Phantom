@@ -1,4 +1,4 @@
 ControlPort 9050
 ControlPort 9051
 CookieAuthentication 1
-CookieAuthFile /var/run/tor/control.authcookie
+HashedControlPassword 16:4E0C1234567890ABCDEF0987654321ABCDE12345678ABCDEF1234567890
