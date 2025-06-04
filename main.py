@@ -2,6 +2,7 @@
 import os, time, socket, subprocess
 
 def intro():
+    # Stylish intro
     print("\033[95m" + "="*80)
     print("                      🔥 FAIZAN™ PRIVACY PROXY SYSTEM v3.1            ")
     print("\033[94m" + "-"*80)
@@ -14,10 +15,10 @@ def intro():
     print("\033[94m" + "-"*80)
     print("               🔒 \033[93mENABLING ULTRA-SECURE ENCRYPTED PROXY OPERATIONS    ")
     print("                         🕵️  \033[91mRUNNING IN STEALTH MODE...                 ")
-    print("\033[94m" + "-"*70 + "\033[0m")
+    print("\033[94m" + "-"*70 + "\033[0m\n")
 
-def intro():
-    print("\n[+] Initializing Faizan™ Privacy Proxy Engine...")
+    # Lite Mode IP Simulation
+    print("[+] Initializing Faizan™ Privacy Proxy Engine...")
     print("[+] Proxy Engine started in Lite Mode (No external libs)")
     print("[*] Starting IP rotation simulation every 2 seconds...\n")
 
