@@ -1,4 +1,4 @@
+ControlPort 9050
 ControlPort 9051
-CookieAuthentication 0
-SocksPort 9050
-Log notice stdout
+CookieAuthentication 1
+CookieAuthFile /var/run/tor/control.authcookie
