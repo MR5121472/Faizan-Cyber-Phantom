@@ -23,7 +23,7 @@ def start_tor():
     torrc_path = os.path.join(os.getcwd(), "torrc")
     try:
         tor_process = subprocess.Popen(
-            ["tor", "-f", torrc_path],
+            ["torrc", "-f", torrc_path],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
