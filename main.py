@@ -52,22 +52,25 @@ def rotate_ip():
 def test_tor_connection():
     print("\n🌐 Testing Tor Proxy Connection via SOCKS5")
     import socks
+    
+    # Global socket settings set karna
     socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
     socket.socket = socks.socksocket
-   
+    
     target_host = "check.torproject.org"
     target_port = 443
-  
     
-   request = (
+    # Sahi request string banaya gaya (Line 62 yahan shuru ho rahi hai)
+    request = (
         f"GET / HTTP/1.1\r\n"
         f"Host: {target_host}\r\n"
         f"Connection: close\r\n"
-        f"User-Agent: FAIZAN_Phantom_V3.2\r\n" # Better header for testing
+        f"User-Agent: FAIZAN_Phantom_V3.2\r\n"
         f"\r\n"
     )
     
     try:
+        # Baaki code ki indentation theek hai
         sock = socket.socket()
         sock.settimeout(10)
         
@@ -78,7 +81,7 @@ def test_tor_connection():
         context = ssl.create_default_context()
         ssock = context.wrap_socket(sock, server_hostname=target_host)
 
-        # 3. Data SIRF ssock ke zariye bhejna (Bad file descriptor se bachne ke liye)
+        # 3. Data SIRF ssock ke zariye bhejna
         ssock.sendall(request.encode('utf-8'))
         
         response_bytes = b''
