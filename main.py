@@ -58,7 +58,7 @@ def test_tor_connection():
         sock = socket.socket()
         sock.settimeout(10)
         sock.connect(("check.torproject.org", 80))
-        sock.sendall(b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\n\r\n")
+        sock.sendall(b"GET / HTTPS/1.1\r\nHost: check.torproject.org\r\n\r\n")
         response = sock.recv(4096)
         print("[+] Response from Tor site:\n")
         print(response.decode())
