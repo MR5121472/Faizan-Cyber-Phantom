@@ -101,22 +101,39 @@ def test_tor_connection():
         print(f"[-] Tor connection failed: {e}")
 
 # ------------------------ MAIN FUNCTION -------------------------
-def main():
-    banner()
-    tor_process = start_tor()
+def main_background():
+    # Banner aur rotation sirf ek baar.
+    banner() 
+    
+    # Tor ko start karein
+    tor_process = start_tor() 
     if not tor_process:
         print("[×] Could not start Tor. Exiting.")
-        return
-
+        return 1
+    
     time.sleep(5)
+    
+    # IP ko rotate karein (Initial Rotation)
     rotate_ip()
-    test_tor_connection()
 
-    print("\n[*] All operations completed.")
-    try:
-        tor_process.terminate()
-    except:
-        pass
+    print("\n[✓] Tor Proxy is now running on SOCKS5: 127.0.0.1:9050")
+    print("[!] You can now use 'curl' and other tools in this terminal.")
+    
+    # Process ID ko print karein taaki hum Tor ko background mein track kar saken
+    print(f"[*] Tor Process ID (PID): {tor_process.pid}")
+    return tor_process
 
 if __name__ == "__main__":
-    main()
+    # Script ko chalaayein aur Tor process ko return karein
+    process = main_background()
+    
+    # Script ko chalte rehne dein
+    if process != 1:
+        try:
+            # Infinite loop mein rahein taaki Tor chalta rahe jab tak user Ctrl+C nahi dabata
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("\n[!] Shutting down Tor process...")
+            process.terminate()
+            print("[✓] Faizan-Cyber-Phantom shut down successfully.")
