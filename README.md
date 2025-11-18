@@ -3,7 +3,7 @@ Designed by Muhammad Faizan Naeem — The Phantom of Stealth. Fully encrypted, u
 
 # Faizan™ Privacy Proxy System v3.0
 
-An advanced stealth-based AI-integrated proxy tool engineered by Muhammad Faizan Naeem (Gujranwala, Pakistan).  
+An advanced stealth-based AI-integrated proxy tool engineered by Muhammad Faizan Naeem (Pakistan).  
 This system is built to provide encrypted, untraceable, and anonymous communication over the web.
 
 > 💠 Status: Private Research  
