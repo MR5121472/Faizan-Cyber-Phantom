@@ -20,8 +20,3 @@ This system is built to provide encrypted, untraceable, and anonymous communicat
 - Command-line stealth interface  
 - Android-ready architecture
 
----
-
-## 🧠 Vision
-
-*"Har hacker chhup kar chalta hai, lekin jab Faizan chalta hai... toh duniya ruk jati hai."*
