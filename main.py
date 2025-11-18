@@ -2,6 +2,7 @@ import os
 import time
 import socket
 import subprocess
+import ssl
 from stem.control import Controller
 
 # ----------------------- INTERFACE ---------------------------
@@ -53,11 +54,16 @@ def test_tor_connection():
     import socks
     socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
     socket.socket = socks.socksocket
-
+    target_host = "check.torproject.org"
+    target_port = 443
     try:
         sock = socket.socket()
         sock.settimeout(10)
-        sock.connect(("check.torproject.org", 443))
+        sock.connect((target_host, target_port))
+        context = ssl.create_default_context()
+        ssock = context.wrap_socket(sock, server_hostname=target_host)
+
+        
         sock.sendall(b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\nConnection: close\r\n\r\n")
         response = sock.recv(4096)
         print("[+] Response from Tor site:\n")
