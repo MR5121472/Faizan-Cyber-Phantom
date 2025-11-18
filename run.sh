@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Tor proxy settings set karna
-export http_proxy="socks5://127.0.0.1:9050"
-export https_proxy="socks5://127.0.0.1:9050"
-export HTTP_PROXY="socks5://127.0.0.1:9050"
-export HTTPS_PROXY="socks5://127.0.0.1:9050"
+export http_proxy="socks5h://127.0.0.1:9050"
+export https_proxy="socks5h://127.0.0.1:9050"
+export HTTP_PROXY="socks5h://127.0.0.1:9050"
+export HTTPS_PROXY="socks5h://127.0.0.1:9050"
 
 # User ko nayi shell mein daalna jahan proxy set ho
 echo "Starting Faizan Cyber Phantom..."
