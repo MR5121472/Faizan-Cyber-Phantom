@@ -68,7 +68,7 @@ def test_tor_connection():
         response = sock.recv(4096)
         print("[+] Response from Tor site:\n")
         print(response.decode())
-        sock.close()
+        
     except Exception as e:
         print("[-] Tor connection failed:", e)
 
