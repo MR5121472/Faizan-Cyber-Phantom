@@ -102,29 +102,38 @@ def test_tor_connection():
 
 # ------------------------ MAIN FUNCTION -------------------------
 def main_background():
-    # ... (Aapka banner aur tor start code wahi rahega) ...
+    # 1. 'tor_process' ko start_tor() se hasil karein
+    # (Yeh line banner() aur baki setup ke baad aayegi)
+    tor_process = start_tor() 
     
-    # ...
+    # Check karein agar Tor shuru nahi hua
+    if not tor_process:
+        print("[×] Could not start Tor. Exiting.")
+        return 1
+
     # IP ko rotate karein (Initial Rotation)
     rotate_ip()
 
     print("\n[✓] Tor Proxy is now running on SOCKS5: 127.0.0.1:9050")
     print("[!] You can now use 'curl' and other tools in this terminal.")
-    print(f"[*] Tor Process ID (PID): {tor_process.pid}")
+    
+    # 2. Ab PID ko print karein, kyunki tor_process available hai
+    print(f"[*] Tor Process ID (PID): {tor_process.pid}") 
     return tor_process
 
+# ------------------------ MAIN FUNCTION (UPDATED) -------------------------
 if __name__ == "__main__":
+    # main_background() ko call karein. Ab yeh ya to process object return karega ya 1.
     process = main_background()
     
     # Script ko chalte rehne dein
     if process != 1:
         try:
             while True:
-                # --- YAHAN CHANGE KAREIN ---
-                time.sleep(10) # 10 seconds tak intezaar karein
-                # Har 10 seconds ke baad IP ko rotate karein
-                rotate_ip() 
-                # --- END CHANGE ---
+                # Automatic IP rotation every 10 seconds
+                time.sleep(10)
+                rotate_ip()
+                
         except KeyboardInterrupt:
             print("\n[!] Shutting down Tor process...")
             process.terminate()
