@@ -54,23 +54,48 @@ def test_tor_connection():
     import socks
     socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
     socket.socket = socks.socksocket
+   
     target_host = "check.torproject.org"
     target_port = 443
+  
+    
+   request = (
+        f"GET / HTTP/1.1\r\n"
+        f"Host: {target_host}\r\n"
+        f"Connection: close\r\n"
+        f"User-Agent: FAIZAN_Phantom_V3.2\r\n" # Better header for testing
+        f"\r\n"
+    )
+    
     try:
         sock = socket.socket()
         sock.settimeout(10)
+        
+        # 1. Tor proxy ke zariye 443 port tak connect hona
         sock.connect((target_host, target_port))
+        
+        # 2. Connection ko SSL/TLS se wrap karna (HTTPS ke liye zaroori)
         context = ssl.create_default_context()
         ssock = context.wrap_socket(sock, server_hostname=target_host)
 
+        # 3. Data SIRF ssock ke zariye bhejna (Bad file descriptor se bachne ke liye)
+        ssock.sendall(request.encode('utf-8'))
         
-        sock.sendall(b"GET / HTTP/1.1\r\nHost: check.torproject.org\r\nConnection: close\r\n\r\n")
-        response = sock.recv(4096)
+        response_bytes = b''
+        while True:
+            chunk = ssock.recv(4096)
+            if not chunk:
+                break
+            response_bytes += chunk
+            
         print("[+] Response from Tor site:\n")
-        print(response.decode())
+        print(response_bytes.decode('utf-8', errors='ignore'))
+        
+        # 4. Sirf SSL socket ko band karna
+        ssock.close() 
         
     except Exception as e:
-        print("[-] Tor connection failed:", e)
+        print(f"[-] Tor connection failed: {e}")
 
 # ------------------------ MAIN FUNCTION -------------------------
 def main():
