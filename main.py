@@ -5,14 +5,14 @@ import subprocess
 import ssl
 from stem.control import Controller
 
-# ----------------------- INTERFACE ---------------------------
+# ----------------------- INTERFACE (BANNER) ---------------------------
 def banner():
     print("\033[95m" + "="*80)
     print("                      \U0001F525 FAIZAN™ PRIVACY PROXY SYSTEM v3.2")
     print("\033[94m" + "-"*80)
     print("\033[93m\U0001F512 ULTRA SECURE. STEALTH. POWERFUL.            \033[92m\U0001F6E1️  DEVELOPED BY:")
     print("\U0001F451  \033[1;96mMUHAMMAD FAIZAN NAEEM")
-    print("✍️  AKA: \033[92mFAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN")
+    print("✍️ C9: \033[92mFAIZAN MUGHAL — THE CYBER PHANTOM OF PAKISTAN")
     print("\033[95m" + "="*80)
     print("="*80)
     print("                 \U0001F525 \033[93mWELCOME TO FAIZAN™ PRIVACY PROXY SYSTEM v3.2")
@@ -31,7 +31,7 @@ def start_tor():
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
-        time.sleep(10)
+        time.sleep(10) # Tor ko initialize hone ka time dena
         return tor_process
     except Exception as e:
         print(f"[x] Failed to start Tor: {e}")
@@ -50,9 +50,13 @@ def rotate_ip():
 
 # ------------------------ TEST TOR CONNECTION --------------------
 def test_tor_connection():
-    print("\n🌐 Testing Tor Proxy Connection via SOCKS5")
-    import socks
-    
+    print("\n🌐 Testing Tor Proxy Connection via SOCKS5...")
+    try:
+        import socks
+    except ImportError:
+        print("[-] PySocks is missing! Run: pip install PySocks")
+        return
+
     # Global socket settings set karna
     socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
     socket.socket = socks.socksocket
@@ -60,7 +64,6 @@ def test_tor_connection():
     target_host = "check.torproject.org"
     target_port = 443
     
-    # Sahi request string banaya gaya (Line 62 yahan shuru ho rahi hai)
     request = (
         f"GET / HTTP/1.1\r\n"
         f"Host: {target_host}\r\n"
@@ -70,18 +73,13 @@ def test_tor_connection():
     )
     
     try:
-        # Baaki code ki indentation theek hai
         sock = socket.socket()
         sock.settimeout(10)
-        
-        # 1. Tor proxy ke zariye 443 port tak connect hona
         sock.connect((target_host, target_port))
         
-        # 2. Connection ko SSL/TLS se wrap karna (HTTPS ke liye zaroori)
         context = ssl.create_default_context()
         ssock = context.wrap_socket(sock, server_hostname=target_host)
 
-        # 3. Data SIRF ssock ke zariye bhejna
         ssock.sendall(request.encode('utf-8'))
         
         response_bytes = b''
@@ -91,44 +89,44 @@ def test_tor_connection():
                 break
             response_bytes += chunk
             
-        print("[+] Response from Tor site:\n")
-        print(response_bytes.decode('utf-8', errors='ignore'))
-        
-        # 4. Sirf SSL socket ko band karna
+        print("[+] Connection Successful! Response received from Tor.")
+        # Agar poori HTML response nahi dekhni toh niche wali line ko comment (#) kar sakte hain
+        # print(response_bytes.decode('utf-8', errors='ignore')[:500]) 
         ssock.close() 
         
     except Exception as e:
         print(f"[-] Tor connection failed: {e}")
 
-# ------------------------ MAIN FUNCTION -------------------------
+# ------------------------ MAIN BACKGROUND FUNCTION -------------------------
 def main_background():
-    # 1. 'tor_process' ko start_tor() se hasil karein
-    # (Yeh line banner() aur baki setup ke baad aayegi)
     tor_process = start_tor() 
     
-    # Check karein agar Tor shuru nahi hua
     if not tor_process:
         print("[×] Could not start Tor. Exiting.")
         return 1
 
-    # IP ko rotate karein (Initial Rotation)
     rotate_ip()
 
     print("\n[✓] Tor Proxy is now running on SOCKS5: 127.0.0.1:9050")
     print("[!] You can now use 'curl' and other tools in this terminal.")
-    
-    # 2. Ab PID ko print karein, kyunki tor_process available hai
     print(f"[*] Tor Process ID (PID): {tor_process.pid}") 
     return tor_process
 
-# ------------------------ MAIN FUNCTION (UPDATED) -------------------------
+# ------------------------ EXECUTION FLOW -------------------------
 if __name__ == "__main__":
-    # main_background() ko call karein. Ab yeh ya to process object return karega ya 1.
+    # 1. Sabse pehle banner display hoga
+    os.system('clear') # Screen clear karne ke liye takay banner top par aaye
+    banner()
+    
+    # 2. Tor process background mein start hoga
     process = main_background()
     
-    # Script ko chalte rehne dein
     if process != 1:
+        # 3. Proxy test run karein
+        test_tor_connection()
+        
         try:
+            print("\n[*] Stealth mode active. Press CTRL+C to exit.")
             while True:
                 # Automatic IP rotation every 10 seconds
                 time.sleep(10)
@@ -138,3 +136,4 @@ if __name__ == "__main__":
             print("\n[!] Shutting down Tor process...")
             process.terminate()
             print("[✓] Faizan-Cyber-Phantom shut down successfully.")
+        
